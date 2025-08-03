@@ -1,0 +1,7 @@
+npm init -y
+    Folders - configs, controllers, models, middlewares, routes, .env, utils
+npm i express nodemon mongoose dotenv 
+    npm i nodemon
+         "start": "node index.js",
+        "dev": "nodemon index.js"
+npm i cookie-parser jsonwebtoken bcrypt nodemailer otp-generator 
