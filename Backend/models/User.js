@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    unique:true
+    unique: true,
   },
   phoneNumber: {
     type: Number,
@@ -33,8 +33,13 @@ const userSchema = new mongoose.Schema({
   },
   additionalDetails: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
     ref: "Profile",
+  },
+  token: {
+    type: String,
+  },
+  resetPasswordExpires: {
+    type: Date,
   },
   courses: [
     {

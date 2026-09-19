@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
 const sectionSchema = new mongoose.Schema({
-  name: {
+  sectionName: {
     type: String,
     required: true,
   },
   noOfLectures: {
     type: Number,
-    required: true,
+    // required: true,
   },
   timeDuration: {
     type: Number,
-    required: true,
+    // required: true,
   },
   subSection: [
     {

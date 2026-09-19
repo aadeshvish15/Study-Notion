@@ -11,15 +11,14 @@ const mailSender = async (email, title, body) => {
     });
 
     let info = await transporter.sendMail({
-      from: "Study Notion || CodeHelp - by Aadesh",
+      from: "Study Notion - by Aadesh",
       to: `${email}`,
       subject: `${title}`,
       html: `${body}`,
     });
 
-      console.log(info);
-      return info;
-
+    console.log(info);
+    return info;
   } catch (err) {
     console.error(err.message);
   }
