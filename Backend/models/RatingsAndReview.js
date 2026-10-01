@@ -1,23 +1,32 @@
 const mongoose = require("mongoose");
 
-const ratingsAndReviewSchema = new mongoose.Schema({
-  users: [
-    {
+const ratingsAndReviewSchema = new mongoose.Schema(
+  {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    ],
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Course",
+      index: true,
+    },
     ratings: {
-        type: Number,
-        required: true,
-        trim:true
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
     },
     reviews: {
-        type: String,
-        required: true,
-        trim:true
-    }
-});
+      type: String,
+      trim: true,
+    },
+  },
+  { timestamps: true }
+);
+// One review per user per course
+ratingsAndReviewSchema.index({ user: 1, course: 1 }, { unique: true });
 
 module.exports = mongoose.model("RatingsAndReview", ratingsAndReviewSchema);

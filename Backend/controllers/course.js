@@ -1,14 +1,13 @@
 const Course = require("../models/Course");
 const User = require("../models/User");
-const Tags = require("../models/Tags");
-const { fileUpload } = require("../utils/fileUpload");
-const Tags = require("../models/Tags");
+const Category = require("../models/Category");
+const { fileUpload } = require("../configs/fileUpload");
 
 //create course
 exports.createCourse = async (req, res) => {
   try {
     //FETCH DATA FROM REQ BODY
-    const { courseName, courseDescription, whatYouWillLearn, price, tags } =
+    const { courseName, courseDescription, whatYouWillLearn, price, category } =
       req.body;
     //GET THUMBNAIL FROM REQ.FILES
     const thumbNail = req.files?.thumbNailIMG;
@@ -19,7 +18,7 @@ exports.createCourse = async (req, res) => {
       !courseDescription ||
       !whatYouWillLearn ||
       !price ||
-      !tags ||
+      !category ||
       !thumbNail
     ) {
       return res.status(400).json({
@@ -37,12 +36,12 @@ exports.createCourse = async (req, res) => {
         message: "User does not exist with this id",
       });
     }
-    //CHECK GIVEN TAG EXISTS IN DB
-    const tagDetails = await Tags.findById(tags);
-    if (!tagDetails) {
+    //CHECK GIVEN category EXISTS IN DB
+    const categoryDetails = await Category.findById(category);
+    if (!categoryDetails) {
       return res.status(403).json({
         success: false,
-        message: "Tag details does not exist",
+        message: "Category details does not exist",
       });
     }
     //UPLOAD THUMBNAIL IMAGE TO CLOUDINARY
@@ -55,7 +54,7 @@ exports.createCourse = async (req, res) => {
       whatYouWillLearn,
       instructor: instructorDetails._id,
       price,
-      tags: tags,
+      category: category,
       thumbnail: thumbNailImg.secure_url,
     });
 
@@ -68,9 +67,9 @@ exports.createCourse = async (req, res) => {
       { new: true }
     );
 
-    //UPDATE THE TAG/CATEGORY SCHEMA
-    await Tags.findByIdAndUpdate(
-      { _id: tagDetails._id },
+    //UPDATE THE CATEGORY SCHEMA
+    await Category.findByIdAndUpdate(
+      { _id: categoryDetails._id },
       {
         $push: { courses: newCourse._id },
       }
@@ -118,6 +117,53 @@ exports.showAllCourses = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch all courses",
+    });
+  }
+};
+
+exports.fetchCourseDetails = async (req, res) => {
+  try {
+    const { courseID } = req.params;
+    if (!courseID) {
+      return res.status(400).json({
+        success: false,
+        message: "All details are required",
+      });
+    }
+    const courseDetails = await Course.findById(courseID)
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+      })
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .populate("ratingsAndReviews")
+      .populate("category")
+      .exec();
+
+    if (!courseDetails) {
+      return res.status(500).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Course Details fetched successfully",
+      date: courseDetails,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching course details",
     });
   }
 };

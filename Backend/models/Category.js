@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
-const tagsSchema = new mongoose.Schema({
-  tagName: {
+const categorySchema = new mongoose.Schema({
+  categoryName: {
     type: String,
     required: true,
     trim: true,
     unique: true,
   },
-  tagDescription: {
+  categoryDescription: {
     type: String,
     required: true,
     trim: true,
@@ -20,4 +20,4 @@ const tagsSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("Tags", tagsSchema);
+module.exports = mongoose.model("Category", categorySchema);
