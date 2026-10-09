@@ -53,7 +53,7 @@ exports.createSubSection = async (req, res) => {
   }
 };
 
-exports.updateSection = async (req, res) => {
+exports.updatSubeSection = async (req, res) => {
   try {
     const { title, description, subSectionId } = req.body;
 
@@ -88,7 +88,7 @@ exports.updateSection = async (req, res) => {
   }
 };
 
-exports.deleteSection = async (req, res) => {
+exports.deleteSubSection = async (req, res) => {
   try {
     const { subSectionId } = req.body;
     const { sectionID } = req.params;

@@ -125,7 +125,7 @@ exports.averageRating = async (req, res) => {
   }
 };
 
-exports.getAllCourseRating = async (req, res) => {
+exports.getCourseAllRating = async (req, res) => {
   try {
     const { courseId } = req.params;
 
