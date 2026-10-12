@@ -7,7 +7,7 @@ exports.authMiddleware = async (req, res, next) => {
     //EXTRACT TOKEN (from cookie, body, or Authorization header)
     const token =
       req.cookies.auth_token ||
-      req.header("Authorization").replace("Bearer ", "");
+      req.header("Authorization")?.replace("Bearer ", "");
 
     //IF TOKEN MISSING - RETURN 401
     if (!token) {

@@ -65,14 +65,14 @@ exports.showAllcategory = async (req, res) => {
 
 exports.categoryPageDetails = async (req, res) => {
   try {
-    const { categoryID } = res.body;
+    const { categoryID } = req.body;
 
     const selectedCategoryDetails = await Category.findById(categoryID)
       .populate("courses")
       .exec();
 
-    if (!categoryDetails) {
-      res.status(404).json({
+    if (!selectedCategoryDetails) {
+      return res.status(404).json({
         success: false,
         message: "No category with this ID found",
       });

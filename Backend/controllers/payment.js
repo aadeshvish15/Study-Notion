@@ -7,7 +7,7 @@ const { default: mongoose } = require("mongoose");
 
 exports.paymentCapture = async (req, res) => {
   const { courseID } = req.body;
-  const { userID } = req.user._id;
+  const userID = req.user._id;
   const courseDetails = await Course.findById(courseID);
   const userDetails = await User.findById(userID);
   try {
@@ -111,7 +111,7 @@ exports.verifySignature = async (req, res) => {
 
       const userCourseEnrolled = await User.findByIdAndUpdate(
         { _id: courseID },
-        { $push: { courses: courseID } },
+        { $addToSet: { courses: courseID } },
         { new: true }
       );
 

@@ -47,15 +47,25 @@ const {
 // ********** Course routes **********
 router.post("/createCourse", authMiddleware, isInstructor, createCourse);
 router.get("/getAllCourses", showAllCourses);
-router.post("/getCourseDetails", fetchCourseDetails);
+router.post("/getCourseDetails/:courseID", fetchCourseDetails);
 
 // ********** Section routes **********
 router.post("/addSection", authMiddleware, isInstructor, createSection);
 router.post("/updateSection", authMiddleware, isInstructor, updateSection);
-router.post("/deleteSection", authMiddleware, isInstructor, deleteSection);
+router.post(
+  "/deleteSection/:sectionId/:courseId",
+  authMiddleware,
+  isInstructor,
+  deleteSection
+);
 
 // ********** SubSection routes **********
-router.post("/addSubSection", authMiddleware, isInstructor, createSubSection);
+router.post(
+  "/addSubSection/:sectionID",
+  authMiddleware,
+  isInstructor,
+  createSubSection
+);
 router.post(
   "/updateSubSection",
   authMiddleware,
@@ -63,7 +73,7 @@ router.post(
   updateSubSection
 );
 router.post(
-  "/deleteSubSection",
+  "/deleteSubSection/:sectionID",
   authMiddleware,
   isInstructor,
   deleteSubSection
@@ -75,8 +85,13 @@ router.get("/showAllCategories", showAllcategory);
 router.post("/getCategoryPageDetails", categoryPageDetails);
 
 // ********** Rating and Review routes **********
-router.post("/createRating", authMiddleware, isStudent, createRatingandReview);
-router.get("/getAverageRating", averageRating);
-router.get("/getCourseReviews", getCourseAllRating);
+router.post(
+  "/createRating/:courseID",
+  authMiddleware,
+  isStudent,
+  createRatingandReview
+);
+router.get("/getAverageRating/:courseId", averageRating);
+router.get("/getReviews/:courseId", getCourseAllRating);
 
 module.exports = router;

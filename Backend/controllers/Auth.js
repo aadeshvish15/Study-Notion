@@ -204,7 +204,7 @@ exports.login = async (req, res) => {
     }
     //GENERATE JWT
     const payload = {
-      userId: user._id,
+      _id: user._id,
       email: user.email,
       accountType: user.accountType,
     };

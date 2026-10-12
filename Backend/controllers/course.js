@@ -1,7 +1,7 @@
 const Course = require("../models/Course");
 const User = require("../models/User");
 const Category = require("../models/Category");
-const { fileUpload } = require("../configs/fileUpload");
+const { fileUpload } = require("../utils/fileUpload");
 
 //create course
 exports.createCourse = async (req, res) => {

@@ -5,7 +5,7 @@ const Course = require("../models/Course");
 exports.createRatingandReview = async (req, res) => {
   try {
     const { courseID } = req.params;
-    const { userID } = req.user._id;
+    const userID = req.user._id;
     const { rating, review } = req.body;
 
     if (!rating) {
