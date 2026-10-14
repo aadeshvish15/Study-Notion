@@ -53,7 +53,7 @@ exports.createSubSection = async (req, res) => {
   }
 };
 
-exports.updatSubeSection = async (req, res) => {
+exports.updateSubSection = async (req, res) => {
   try {
     const { title, description, subSectionId } = req.body;
 
