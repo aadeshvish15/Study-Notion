@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 //Reset Password token
 exports.resetPasswordToken = async (req, res) => {
@@ -17,7 +18,7 @@ exports.resetPasswordToken = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (user) {
+    if (!user) {
       return res.status(401).json({
         success: false,
         message: "User does not exist with this email",
@@ -38,13 +39,13 @@ exports.resetPasswordToken = async (req, res) => {
     );
 
     //create URL
-    const URL = `http://localhost:3000/update-password/${token}`;
+    const URL = `${process.env.FRONTEND_URL}/update-password/${token}`;
 
     //send mail to user
-    mailSender(
+    await mailSender(
       email,
       "Password Reset Link",
-      `Password reset link: ${url}. This link is valid for 5 minutes. If you did not request this, please ignore.`
+      `Password reset link: ${URL}. This link is valid for 5 minutes. If you did not request this, please ignore.`
     );
 
     // RETURN RESPONSE
@@ -68,7 +69,7 @@ exports.resetPassword = async (req, res) => {
     const { token, newPassword, confirmPassword } = req.body;
 
     //get user details through token
-    const userDetails = User.findOne({ token: token });
+    const userDetails = await User.findOne({ token: token });
     if (!userDetails) {
       return res.status(404).json({
         success: false,

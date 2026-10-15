@@ -6,6 +6,7 @@ const OTP = require("../models/OTP");
 const Profile = require("../models/Profile");
 require("dotenv").config();
 const mailSender = require("../utils/mailSender");
+const otpVerificationTemplate = require("../mail/templates/emailVerificationTemplate");
 
 //homework: email validation
 
@@ -30,7 +31,12 @@ exports.sendOTP = async (req, res) => {
       lowerCaseAlphabets: false,
       specialChars: false,
     });
-    console.log("OTP is:", otp);
+    mailSender(
+      email,
+      "Verification email from Study Notion",
+      otpVerificationTemplate(otp)
+    );
+    // console.log("OTP is:", otp);
 
     //CHECK UNIQUE OTP
     let result = await OTP.findOne({ otp: otp });
@@ -124,7 +130,7 @@ exports.signUp = async (req, res) => {
         success: false,
         message: "OTP not found",
       });
-    } else if (otp !== recentOTP.otp) {
+    } else if (otp !== recentOTP[0].otp) {
       return res.status(400).json({
         success: false,
         message: "Invalid OTP",
@@ -143,9 +149,9 @@ exports.signUp = async (req, res) => {
     //CREATE ENTRY IN DB
     const profileDetails = await Profile.create({
       profileImage: `https://ui-avatars.com/api/?background=random&name=${firstName}+${lastName}`,
-      dateOfBirth,
-      gender,
-      about,
+      dateOfBirth: null,
+      gender: null,
+      about: null,
     });
 
     const user = await User.create({
@@ -153,7 +159,7 @@ exports.signUp = async (req, res) => {
       lastName,
       email,
       phoneNumber,
-      hashedPassword,
+      password: hashedPassword,
       accountType,
       additionalDetails: profileDetails._id,
     });
@@ -177,7 +183,7 @@ exports.signUp = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     //GET EMAIL AND PASSWORD FROM REQ BODY
-    const { email, password, role } = req.body;
+    const { email, password, accountType } = req.body;
     //VALIDATE DATA
     if (!email || !password) {
       return res.status(403).json({
@@ -186,7 +192,7 @@ exports.login = async (req, res) => {
       });
     }
     //CHECK IF USER EXISTS
-    const user = await User.findOne({ email }).populate("Profile");
+    const user = await User.findOne({ email }).populate("additionalDetails");
     //  const checkUserPhoneNo = await User.findOne({ phoneNumber });
     if (!user /*|| checkUserPhoneNo*/) {
       return res.status(404).json({
@@ -254,7 +260,7 @@ exports.changePassword = async (req, res) => {
       });
     }
     //Find user from DB
-    const userFromDB = User.findOne({ email: userEmail });
+    const userFromDB = await User.findOne({ email: userEmail });
     if (!userFromDB) {
       return res.status(404).json({
         success: false,

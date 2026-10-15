@@ -82,7 +82,7 @@ router.post(
 // ********** Category routes **********
 router.post("/createCategory", authMiddleware, isAdmin, createCategory);
 router.get("/showAllCategories", showAllcategory);
-router.post("/getCategoryPageDetails", categoryPageDetails);
+router.get("/getCategoryPageDetails", categoryPageDetails);
 
 // ********** Rating and Review routes **********
 router.post(
